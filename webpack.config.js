@@ -1,3 +1,4 @@
+const autoprefixer = require('autoprefixer');
 module.exports = [{
     entry: './app.scss',
     output: {
@@ -17,8 +18,33 @@ module.exports = [{
           },
           { loader: 'extract-loader' },
           { loader: 'css-loader' },
-          { loader: 'sass-loader' },
+          { loader: 'postcss-loader',
+            options: {
+              plugins: () => [autoprefixer({ grid: false })]
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: ['./node_modules']
+            }
+          },
         ]
       }]
     },
   }];
+  module.exports.push({
+    entry: './app.js',
+    output: {
+      filename: 'bundle.js'
+    },
+    module: {
+      loaders: [{
+        test: /\.js$/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
+      }]
+    },
+  });
